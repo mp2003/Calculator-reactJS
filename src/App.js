@@ -22,12 +22,37 @@ const App = () => {
   };
   const calculate = () => {
     try {
-      setResult(eval(expression).toString());
+      let updatedExpression = expression;
+
+      // Replace the symbols "e" and "μ" with their numerical values in the expression
+      updatedExpression = updatedExpression.replace(/e/g, "*" + Math.E);
+      updatedExpression = updatedExpression.replace(/μ/g, "*" + Math.PI);
+      updatedExpression = updatedExpression.replace(/π/g, "*" + Math.PI);
+
+      updatedExpression = updatedExpression.replace(/ln2/g,"*"+ Math.LN2 );
+      // Perform the actual calculation
+      setResult(eval(updatedExpression).toString());
     } catch (err) {
       setResult("ERROR");
-      setTimeout(() => {
-        setResult("");
-      }, 500);
+    }
+  };
+
+  const handleScientificClick = (value) => {
+    switch (value) {
+      case "e":
+        setExpression(expression.concat("e"));
+        break;
+      case "μ":
+        setExpression(expression.concat("μ"));
+        break;
+      case "π":
+        setExpression(expression.concat("π"));
+        break;
+      case "ln2":
+        setExpression(expression.concat("ln2"));
+        break;
+      default:
+        break;
     }
   };
 
@@ -36,7 +61,7 @@ const App = () => {
       <form>
         <input
           type="text"
-          value={expression}
+          value={expression.replace(/e/g, "e").replace(/μ/g, "μ")}
           readOnly
           style={{ color: { Color } }}
         />
@@ -50,23 +75,33 @@ const App = () => {
       </form>
 
       <div className="keypad">
-        <button id="scientific" >e</button>
-        <button id="scientific">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="10"
-            height="16"
-            viewBox="0 0 10 16"
-            fill="none"
-          >
-            <path
-              d="M9.68904 0.682983V10.601H7.61904V8.53098C7.36704 9.23898 6.94704 9.78498 6.35904 10.169C5.78304 10.553 5.10504 10.745 4.32504 10.745C3.92904 10.745 3.55704 10.673 3.20904 10.529C2.86104 10.385 2.57904 10.151 2.36304 9.82698V15.317H0.311035V0.682983H2.36304V5.84898C2.36304 6.85698 2.60304 7.62498 3.08304 8.15298C3.57504 8.68098 4.22904 8.94498 5.04504 8.94498C5.82504 8.94498 6.44904 8.69298 6.91704 8.18898C7.38504 7.67298 7.61904 6.92298 7.61904 5.93898V0.682983H9.68904Z"
-              fill="#29A8FF"
-            />
-          </svg>
+        <button
+          value="e"
+          onClick={(e) => handleScientificClick(e.target.value)}
+          id="scientific"
+        >
+          x(e)
         </button>
-        <button id="scientific">sin</button>
-        <button id="scientific">deg</button>
+        <button
+          value="μ"
+          onClick={() => handleScientificClick("μ")}
+          id="scientific"
+        >x(μ)
+        </button>
+        <button
+          value="π"
+          onClick={() => handleScientificClick("π")}
+          id="scientific"
+        >
+        ×(π)
+        </button>
+        <button
+          value="ln2"
+          onClick={() => handleScientificClick("ln2")}
+          id="scientific"
+        >
+          x(ln2)
+        </button>
         <button onClick={Delete} id="special-button">
           Ac
         </button>
